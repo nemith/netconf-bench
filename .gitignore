@@ -1,0 +1,29 @@
+# Binaries
+build-out/
+*.exe
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Go
+vendor/
+
+# Results
+results/*.json
+results/*.csv
+graphs/*.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
