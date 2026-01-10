@@ -15,12 +15,13 @@ import (
 )
 
 var (
-	host  = flag.String("host", "localhost", "NETCONF server host")
-	port  = flag.Int("port", 8830, "NETCONF server port")
-	user  = flag.String("user", "admin", "SSH username")
-	pass  = flag.String("pass", "admin", "SSH password")
-	size  = flag.Int("size", 1024, "Response size in bytes")
-	count = flag.Int("count", 10, "Number of requests")
+	host   = flag.String("host", "localhost", "NETCONF server host")
+	port   = flag.Int("port", 8830, "NETCONF server port")
+	user   = flag.String("user", "admin", "SSH username")
+	pass   = flag.String("pass", "admin", "SSH password")
+	size   = flag.Int("size", 1024, "Response size in bytes")
+	count  = flag.Int("count", 10, "Number of requests")
+	method = flag.String("method", "exec", "Request method: exec or do")
 )
 
 func main() {
@@ -57,11 +58,15 @@ func main() {
 		session.Close(ctx)
 	}()
 
-	slog.Info("running requests", "count", *count, "size", *size)
+	slog.Info("running requests", "count", *count, "size", *size, "method", *method)
 
 	start := time.Now()
 
-	runSequential(ctx, session)
+	if *method == "do" {
+		runSequentialDo(ctx, session)
+	} else {
+		runSequentialExec(ctx, session)
+	}
 
 	duration := time.Since(start)
 
@@ -72,7 +77,7 @@ func main() {
 	slog.Info("completed", "duration", duration, "rps", throughput, "transfered_MB", dataTransferred)
 }
 
-func runSequential(ctx context.Context, session *netconf.Session) {
+func runSequentialExec(ctx context.Context, session *netconf.Session) {
 	for i := range *count {
 		logger := slog.With("req_id", i)
 
@@ -84,6 +89,25 @@ func runSequential(ctx context.Context, session *netconf.Session) {
 		if err := session.Exec(ctx, req, &reply); err != nil {
 			logger.Error("request failed", "error", err)
 		}
+		logger.Info("request completed")
+	}
+}
+
+func runSequentialDo(ctx context.Context, session *netconf.Session) {
+	for i := range *count {
+		logger := slog.With("req_id", i)
+
+		filter := rpc.SubtreeFilter(fmt.Sprintf("<size>%d</size>", *size))
+		req := &rpc.Get{Filter: filter}
+		rpcMsg := netconf.NewRPC(req)
+
+		logger.Info("sending request", "size", *size)
+		msg, err := session.Do(ctx, rpcMsg)
+		if err != nil {
+			logger.Error("request failed", "error", err)
+			continue
+		}
+		msg.Close()
 		logger.Info("request completed")
 	}
 }

@@ -4,7 +4,8 @@ A comprehensive benchmark suite for comparing NETCONF client implementations.
 
 ## Tested Clients
 
-- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) ✅
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (Exec) ✅
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (Do) ✅
 - **Go**: [scrapli/scrapligo](https://github.com/scrapli/scrapligo) ✅
 - **Python**: [ncclient](https://github.com/ncclient/ncclient) (paramiko) ✅
 - **Python**: [ncclient](https://github.com/ncclient/ncclient) (libssh) ✅
@@ -24,26 +25,28 @@ All tests run 100 requests comparing NETCONF 1.1 (Chunked Framing) vs NETCONF 1.
 #### NETCONF 1.1 (Chunked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 23.1 ± 2.1 | 20.6 | 32.2 | 1.00 |
-| `Go (scrapli/scrapligo)` | 114.1 ± 3.8 | 104.1 | 119.6 | 4.93 ± 0.48 |
-| `Python (ncclient/paramiko)` | 10433.1 ± 8.0 | 10420.0 | 10447.1 | 451.19 ± 40.74 |
-| `Python (ncclient/libssh)` | 10341.7 ± 6.8 | 10332.8 | 10351.7 | 447.24 ± 40.38 |
-| `Python (scrapli-netconf/system)` | 30325.3 ± 6.4 | 30314.2 | 30333.8 | 1311.47 ± 118.41 |
-| `Python (scrapli-netconf/paramiko)` | 167.3 ± 8.0 | 150.2 | 182.4 | 7.24 ± 0.74 |
-| `Python (scrapli-netconf/ssh2)` | 194.3 ± 8.8 | 180.2 | 207.1 | 8.40 ± 0.85 |
-| `Python (scrapli-netconf/asyncssh)` | 185.8 ± 11.9 | 170.0 | 209.3 | 8.03 ± 0.89 |
+| `Go (nemith.io/netconf/exec)` | 29.3 ± 3.6 | 17.9 | 35.8 | 1.24 ± 0.22 |
+| `Go (nemith.io/netconf/do)` | 23.8 ± 2.9 | 17.6 | 29.4 | 1.00 |
+| `Go (scrapli/scrapligo)` | 119.1 ± 9.6 | 111.8 | 161.1 | 5.01 ± 0.74 |
+| `Python (ncclient/paramiko)` | 10427.3 ± 4.8 | 10421.9 | 10435.3 | 438.83 ± 54.46 |
+| `Python (ncclient/libssh)` | 10340.7 ± 3.7 | 10336.2 | 10349.6 | 435.19 ± 54.00 |
+| `Python (scrapli-netconf/system)` | 30325.9 ± 7.6 | 30308.1 | 30334.6 | 1276.27 ± 158.37 |
+| `Python (scrapli-netconf/paramiko)` | 174.7 ± 7.1 | 169.0 | 191.8 | 7.35 ± 0.96 |
+| `Python (scrapli-netconf/ssh2)` | 214.3 ± 7.5 | 200.7 | 226.4 | 9.02 ± 1.16 |
+| `Python (scrapli-netconf/asyncssh)` | 190.5 ± 6.1 | 178.9 | 199.6 | 8.02 ± 1.03 |
 
 #### NETCONF 1.0 (Marked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 24.3 ± 2.5 | 21.4 | 32.7 | 1.00 |
-| `Go (scrapli/scrapligo)` | 101.6 ± 21.9 | 37.4 | 115.8 | 4.19 ± 1.00 |
-| `Python (ncclient/paramiko)` | 10426.9 ± 7.9 | 10419.8 | 10445.2 | 429.85 ± 43.72 |
-| `Python (ncclient/libssh)` | 10358.9 ± 41.6 | 10325.1 | 10419.7 | 427.05 ± 43.47 |
-| `Python (scrapli-netconf/system)` | 231.8 ± 5.9 | 224.8 | 247.4 | 9.56 ± 1.00 |
-| `Python (scrapli-netconf/paramiko)` | 165.0 ± 8.8 | 151.5 | 187.8 | 6.80 ± 0.78 |
-| `Python (scrapli-netconf/ssh2)` | 189.3 ± 9.2 | 177.5 | 209.5 | 7.80 ± 0.88 |
-| `Python (scrapli-netconf/asyncssh)` | 175.6 ± 6.8 | 166.4 | 187.7 | 7.24 ± 0.79 |
+| `Go (nemith.io/netconf/exec)` | 30.4 ± 2.3 | 22.8 | 35.3 | 1.35 ± 0.20 |
+| `Go (nemith.io/netconf/do)` | 22.6 ± 2.8 | 16.7 | 28.0 | 1.00 |
+| `Go (scrapli/scrapligo)` | 108.0 ± 18.9 | 44.5 | 119.2 | 4.78 ± 1.03 |
+| `Python (ncclient/paramiko)` | 10428.4 ± 7.5 | 10422.5 | 10447.6 | 461.56 ± 58.06 |
+| `Python (ncclient/libssh)` | 10341.9 ± 6.8 | 10335.8 | 10355.7 | 457.73 ± 57.57 |
+| `Python (scrapli-netconf/system)` | 234.3 ± 3.9 | 230.0 | 244.7 | 10.37 ± 1.32 |
+| `Python (scrapli-netconf/paramiko)` | 167.2 ± 9.9 | 151.4 | 187.7 | 7.40 ± 1.03 |
+| `Python (scrapli-netconf/ssh2)` | 204.5 ± 7.0 | 194.4 | 218.2 | 9.05 ± 1.18 |
+| `Python (scrapli-netconf/asyncssh)` | 180.3 ± 6.5 | 166.2 | 191.4 | 7.98 ± 1.04 |
 
 ### 10KB Responses
 
@@ -52,26 +55,28 @@ All tests run 100 requests comparing NETCONF 1.1 (Chunked Framing) vs NETCONF 1.
 #### NETCONF 1.1 (Chunked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 67.1 ± 3.2 | 58.6 | 74.3 | 1.00 |
-| `Go (scrapli/scrapligo)` | 163.4 ± 3.9 | 157.6 | 172.0 | 2.44 ± 0.13 |
-| `Python (ncclient/paramiko)` | 10533.9 ± 12.5 | 10516.5 | 10563.9 | 157.01 ± 7.46 |
-| `Python (ncclient/libssh)` | 10452.9 ± 6.5 | 10441.0 | 10461.1 | 155.81 ± 7.40 |
-| `Python (scrapli-netconf/system)` | 30333.1 ± 9.3 | 30316.9 | 30352.7 | 452.14 ± 21.48 |
-| `Python (scrapli-netconf/paramiko)` | 198.8 ± 10.3 | 188.5 | 226.0 | 2.96 ± 0.21 |
-| `Python (scrapli-netconf/ssh2)` | 219.1 ± 9.8 | 203.4 | 237.8 | 3.27 ± 0.21 |
-| `Python (scrapli-netconf/asyncssh)` | 211.6 ± 10.0 | 193.5 | 230.6 | 3.15 ± 0.21 |
+| `Go (nemith.io/netconf/exec)` | 69.3 ± 2.3 | 66.0 | 77.4 | 2.58 ± 0.22 |
+| `Go (nemith.io/netconf/do)` | 26.9 ± 2.1 | 20.4 | 32.4 | 1.00 |
+| `Go (scrapli/scrapligo)` | 166.4 ± 3.3 | 159.8 | 171.6 | 6.18 ± 0.50 |
+| `Python (ncclient/paramiko)` | 10454.9 ± 11.9 | 10442.9 | 10483.4 | 388.38 ± 30.47 |
+| `Python (ncclient/libssh)` | 10362.9 ± 4.5 | 10357.2 | 10373.5 | 384.96 ± 30.20 |
+| `Python (scrapli-netconf/system)` | 30325.2 ± 7.6 | 30310.7 | 30336.9 | 1126.52 ± 88.36 |
+| `Python (scrapli-netconf/paramiko)` | 185.7 ± 4.6 | 174.9 | 195.1 | 6.90 ± 0.57 |
+| `Python (scrapli-netconf/ssh2)` | 238.6 ± 10.5 | 220.1 | 255.6 | 8.86 ± 0.80 |
+| `Python (scrapli-netconf/asyncssh)` | 204.5 ± 5.8 | 198.4 | 217.7 | 7.60 ± 0.63 |
 
 #### NETCONF 1.0 (Marked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 73.1 ± 4.7 | 65.0 | 83.5 | 1.00 |
-| `Go (scrapli/scrapligo)` | 130.8 ± 19.0 | 70.9 | 142.2 | 1.79 ± 0.28 |
-| `Python (ncclient/paramiko)` | 10468.4 ± 8.9 | 10453.7 | 10481.0 | 143.26 ± 9.14 |
-| `Python (ncclient/libssh)` | 10369.4 ± 9.5 | 10352.8 | 10383.6 | 141.91 ± 9.06 |
-| `Python (scrapli-netconf/system)` | 265.2 ± 5.3 | 259.3 | 275.1 | 3.63 ± 0.24 |
-| `Python (scrapli-netconf/paramiko)` | 194.2 ± 12.5 | 177.8 | 221.3 | 2.66 ± 0.24 |
-| `Python (scrapli-netconf/ssh2)` | 230.3 ± 10.7 | 209.1 | 249.3 | 3.15 ± 0.25 |
-| `Python (scrapli-netconf/asyncssh)` | 203.6 ± 7.4 | 192.6 | 219.8 | 2.79 ± 0.20 |
+| `Go (nemith.io/netconf/exec)` | 73.9 ± 3.7 | 64.4 | 84.2 | 2.36 ± 0.22 |
+| `Go (nemith.io/netconf/do)` | 31.3 ± 2.5 | 23.4 | 36.5 | 1.00 |
+| `Go (scrapli/scrapligo)` | 141.1 ± 1.4 | 138.5 | 143.5 | 4.51 ± 0.36 |
+| `Python (ncclient/paramiko)` | 10466.9 ± 38.6 | 10436.5 | 10541.9 | 334.81 ± 26.57 |
+| `Python (ncclient/libssh)` | 10452.0 ± 2.6 | 10448.4 | 10456.0 | 334.34 ± 26.50 |
+| `Python (scrapli-netconf/system)` | 262.1 ± 8.2 | 249.6 | 279.8 | 8.38 ± 0.71 |
+| `Python (scrapli-netconf/paramiko)` | 190.1 ± 9.3 | 175.2 | 205.6 | 6.08 ± 0.57 |
+| `Python (scrapli-netconf/ssh2)` | 234.6 ± 5.8 | 222.2 | 244.5 | 7.50 ± 0.62 |
+| `Python (scrapli-netconf/asyncssh)` | 193.5 ± 3.5 | 190.1 | 203.1 | 6.19 ± 0.50 |
 
 ### 100KB Responses
 
@@ -80,26 +85,28 @@ All tests run 100 requests comparing NETCONF 1.1 (Chunked Framing) vs NETCONF 1.
 #### NETCONF 1.1 (Chunked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 424.8 ± 7.6 | 414.0 | 439.7 | 1.13 ± 0.03 |
-| `Go (scrapli/scrapligo)` | 1175.3 ± 5.0 | 1166.7 | 1185.0 | 3.13 ± 0.08 |
-| `Python (ncclient/paramiko)` | 10582.7 ± 8.2 | 10569.4 | 10595.2 | 28.16 ± 0.71 |
-| `Python (ncclient/libssh)` | 10480.1 ± 7.0 | 10472.5 | 10495.0 | 27.89 ± 0.70 |
-| `Python (scrapli-netconf/system)` | 30337.3 ± 6.9 | 30329.7 | 30355.3 | 80.72 ± 2.04 |
-| `Python (scrapli-netconf/paramiko)` | 375.8 ± 9.5 | 357.7 | 391.3 | 1.00 |
-| `Python (scrapli-netconf/ssh2)` | 492.1 ± 17.0 | 475.0 | 533.5 | 1.31 ± 0.06 |
-| `Python (scrapli-netconf/asyncssh)` | 381.8 ± 6.8 | 364.5 | 388.9 | 1.02 ± 0.03 |
+| `Go (nemith.io/netconf/exec)` | 416.1 ± 6.1 | 407.6 | 426.2 | 7.87 ± 2.90 |
+| `Go (nemith.io/netconf/do)` | 52.8 ± 19.4 | 46.0 | 150.0 | 1.00 |
+| `Go (scrapli/scrapligo)` | 1176.1 ± 6.5 | 1164.3 | 1184.5 | 22.26 ± 8.18 |
+| `Python (ncclient/paramiko)` | 10651.6 ± 10.8 | 10639.9 | 10676.4 | 201.57 ± 74.10 |
+| `Python (ncclient/libssh)` | 10556.8 ± 5.4 | 10550.3 | 10564.2 | 199.77 ± 73.44 |
+| `Python (scrapli-netconf/system)` | 30342.3 ± 10.4 | 30328.2 | 30365.7 | 574.19 ± 211.08 |
+| `Python (scrapli-netconf/paramiko)` | 374.2 ± 12.5 | 364.2 | 407.3 | 7.08 ± 2.61 |
+| `Python (scrapli-netconf/ssh2)` | 484.7 ± 7.3 | 471.1 | 495.4 | 9.17 ± 3.37 |
+| `Python (scrapli-netconf/asyncssh)` | 368.4 ± 5.1 | 355.3 | 372.8 | 6.97 ± 2.56 |
 
 #### NETCONF 1.0 (Marked)
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 447.3 ± 3.5 | 442.3 | 452.6 | 1.16 ± 0.02 |
-| `Go (scrapli/scrapligo)` | 480.0 ± 6.9 | 470.2 | 494.1 | 1.24 ± 0.03 |
-| `Python (ncclient/paramiko)` | 10579.5 ± 20.6 | 10560.6 | 10626.7 | 27.38 ± 0.55 |
-| `Python (ncclient/libssh)` | 10475.0 ± 6.7 | 10464.1 | 10485.2 | 27.11 ± 0.54 |
-| `Python (scrapli-netconf/system)` | 492.5 ± 5.1 | 485.5 | 502.5 | 1.27 ± 0.03 |
-| `Python (scrapli-netconf/paramiko)` | 390.0 ± 14.1 | 369.2 | 418.2 | 1.01 ± 0.04 |
-| `Python (scrapli-netconf/ssh2)` | 487.4 ± 11.7 | 464.4 | 507.2 | 1.26 ± 0.04 |
-| `Python (scrapli-netconf/asyncssh)` | 386.5 ± 7.8 | 378.4 | 400.0 | 1.00 |
+| `Go (nemith.io/netconf/exec)` | 442.5 ± 4.1 | 435.3 | 447.6 | 5.58 ± 0.09 |
+| `Go (nemith.io/netconf/do)` | 79.3 ± 1.1 | 77.5 | 82.6 | 1.00 |
+| `Go (scrapli/scrapligo)` | 465.7 ± 5.9 | 459.6 | 481.7 | 5.87 ± 0.11 |
+| `Python (ncclient/paramiko)` | 10615.6 ± 13.5 | 10594.8 | 10641.1 | 133.90 ± 1.91 |
+| `Python (ncclient/libssh)` | 10553.7 ± 9.8 | 10529.7 | 10567.1 | 133.12 ± 1.90 |
+| `Python (scrapli-netconf/system)` | 489.0 ± 7.2 | 474.8 | 498.9 | 6.17 ± 0.13 |
+| `Python (scrapli-netconf/paramiko)` | 362.8 ± 9.6 | 340.6 | 374.2 | 4.58 ± 0.14 |
+| `Python (scrapli-netconf/ssh2)` | 481.0 ± 9.3 | 467.3 | 499.9 | 6.07 ± 0.15 |
+| `Python (scrapli-netconf/asyncssh)` | 370.2 ± 6.2 | 359.2 | 380.1 | 4.67 ± 0.10 |
 
 ### 1MB Responses
 
@@ -108,26 +115,28 @@ All tests run 100 requests comparing NETCONF 1.1 (Chunked Framing) vs NETCONF 1.
 #### NETCONF 1.1 (Chunked)
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 3.944 ± 0.040 | 3.883 | 4.007 | 1.89 ± 0.03 |
-| `Go (scrapli/scrapligo)` | 59.781 ± 0.360 | 59.021 | 60.309 | 28.59 ± 0.46 |
-| `Python (ncclient/paramiko)` | 11.973 ± 0.026 | 11.932 | 12.016 | 5.73 ± 0.09 |
-| `Python (ncclient/libssh)` | 11.800 ± 0.012 | 11.779 | 11.814 | 5.64 ± 0.08 |
-| `Python (scrapli-netconf/system)` | 30.345 ± 0.008 | 30.332 | 30.360 | 14.52 ± 0.21 |
-| `Python (scrapli-netconf/paramiko)` | 2.208 ± 0.035 | 2.148 | 2.275 | 1.06 ± 0.02 |
-| `Python (scrapli-netconf/ssh2)` | 2.932 ± 0.023 | 2.907 | 2.979 | 1.40 ± 0.02 |
-| `Python (scrapli-netconf/asyncssh)` | 2.091 ± 0.031 | 2.057 | 2.163 | 1.00 |
+| `Go (nemith.io/netconf/exec)` | 3.816 ± 0.022 | 3.776 | 3.853 | 12.35 ± 0.17 |
+| `Go (nemith.io/netconf/do)` | 0.309 ± 0.004 | 0.304 | 0.315 | 1.00 |
+| `Go (scrapli/scrapligo)` | 61.088 ± 0.182 | 60.761 | 61.389 | 197.76 ± 2.49 |
+| `Python (ncclient/paramiko)` | 12.038 ± 0.045 | 11.948 | 12.078 | 38.97 ± 0.50 |
+| `Python (ncclient/libssh)` | 11.898 ± 0.025 | 11.839 | 11.934 | 38.52 ± 0.48 |
+| `Python (scrapli-netconf/system)` | 30.351 ± 0.007 | 30.337 | 30.359 | 98.26 ± 1.20 |
+| `Python (scrapli-netconf/paramiko)` | 2.145 ± 0.014 | 2.122 | 2.163 | 6.94 ± 0.10 |
+| `Python (scrapli-netconf/ssh2)` | 2.803 ± 0.016 | 2.782 | 2.828 | 9.07 ± 0.12 |
+| `Python (scrapli-netconf/asyncssh)` | 2.015 ± 0.020 | 1.978 | 2.049 | 6.52 ± 0.10 |
 
 #### NETCONF 1.0 (Marked)
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf)` | 4.607 ± 0.036 | 4.554 | 4.665 | 2.24 ± 0.06 |
-| `Go (scrapli/scrapligo)` | 3.946 ± 0.012 | 3.928 | 3.969 | 1.92 ± 0.05 |
-| `Python (ncclient/paramiko)` | 11.055 ± 0.017 | 11.031 | 11.093 | 5.38 ± 0.14 |
-| `Python (ncclient/libssh)` | 10.932 ± 0.010 | 10.918 | 10.948 | 5.32 ± 0.14 |
-| `Python (scrapli-netconf/system)` | 2.601 ± 0.047 | 2.548 | 2.677 | 1.27 ± 0.04 |
-| `Python (scrapli-netconf/paramiko)` | 2.099 ± 0.065 | 2.034 | 2.211 | 1.02 ± 0.04 |
-| `Python (scrapli-netconf/ssh2)` | 2.950 ± 0.044 | 2.869 | 3.010 | 1.44 ± 0.04 |
-| `Python (scrapli-netconf/asyncssh)` | 2.054 ± 0.054 | 1.977 | 2.138 | 1.00 |
+| `Go (nemith.io/netconf/exec)` | 4.614 ± 0.100 | 4.354 | 4.687 | 5.38 ± 0.13 |
+| `Go (nemith.io/netconf/do)` | 0.858 ± 0.008 | 0.844 | 0.875 | 1.00 |
+| `Go (scrapli/scrapligo)` | 3.934 ± 0.028 | 3.890 | 3.965 | 4.59 ± 0.05 |
+| `Python (ncclient/paramiko)` | 11.167 ± 0.132 | 10.971 | 11.278 | 13.02 ± 0.20 |
+| `Python (ncclient/libssh)` | 11.081 ± 0.029 | 11.002 | 11.099 | 12.92 ± 0.13 |
+| `Python (scrapli-netconf/system)` | 2.625 ± 0.012 | 2.608 | 2.645 | 3.06 ± 0.03 |
+| `Python (scrapli-netconf/paramiko)` | 2.165 ± 0.029 | 2.092 | 2.195 | 2.52 ± 0.04 |
+| `Python (scrapli-netconf/ssh2)` | 2.840 ± 0.021 | 2.810 | 2.884 | 3.31 ± 0.04 |
+| `Python (scrapli-netconf/asyncssh)` | 1.885 ± 0.017 | 1.863 | 1.919 | 2.20 ± 0.03 |
 
 ## Running Benchmarks
 

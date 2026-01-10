@@ -21,7 +21,8 @@ A comprehensive benchmark suite for comparing NETCONF client implementations.
 
 ## Tested Clients
 
-- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) ✅
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (Exec) ✅
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (Do) ✅
 - **Go**: [scrapli/scrapligo](https://github.com/scrapli/scrapligo) ✅
 - **Python**: [ncclient](https://github.com/ncclient/ncclient) (paramiko) ✅
 - **Python**: [ncclient](https://github.com/ncclient/ncclient) (libssh) ✅
@@ -149,7 +150,8 @@ echo ""
 # --- Define Common Aliases ---
 # These arguments clean up the legend in the graph.
 PLOT_ALIASES=(
-    --alias ".*nemith-benchmark.*" "Go (nemith.io)"
+    --alias ".*nemith.*exec.*" "Go (nemith.io-Exec)"
+    --alias ".*nemith.*do.*" "Go (nemith.io-Do)"
     --alias ".*scrapligo-benchmark.*" "Go (scrapli)"
     --alias ".*ncclient.*paramiko.*" "Python (ncclient-paramiko)"
     --alias ".*ncclient.*libssh.*" "Python (ncclient-libssh)"
@@ -201,7 +203,8 @@ for size in 1024 10240 102400 1048576; do
         hyperfine --warmup 2 \
             --export-markdown "${RESULTS_DIR}/size-${size}-${framing_mode}.md" \
             --export-json "$JSON_OUT" \
-            --command-name "Go (nemith.io/netconf)" "./$BUILD_DIR/nemith-benchmark --size ${size} --count 100" \
+            --command-name "Go (nemith.io/netconf/exec)" "./$BUILD_DIR/nemith-benchmark --method exec --size ${size} --count 100" \
+            --command-name "Go (nemith.io/netconf/do)" "./$BUILD_DIR/nemith-benchmark --method do --size ${size} --count 100" \
             --command-name "Go (scrapli/scrapligo)" "./$BUILD_DIR/scrapligo-benchmark --size ${size} --count 100" \
             --command-name "Python (ncclient/paramiko)" "cd clients/ncclient && ./.venv/bin/python benchmark.py --backend paramiko --size ${size} --count 100 && cd ../.." \
             --command-name "Python (ncclient/libssh)" "cd clients/ncclient && ./.venv/bin/python benchmark.py --backend libssh --size ${size} --count 100 && cd ../.." \
