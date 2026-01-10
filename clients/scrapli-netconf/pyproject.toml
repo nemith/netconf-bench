@@ -1,0 +1,14 @@
+[project]
+name = "scrapli-netconf-benchmark"
+version = "0.1.0"
+description = "NETCONF scrapli benchmark with multiple transport options"
+requires-python = ">=3.9"
+dependencies = [
+    "scrapli-netconf>=2025.1.30",
+    "paramiko>=3.0.0",
+    "ssh2-python>=1.0.0",
+    "asyncssh>=2.0.0",
+]
+
+[project.scripts]
+benchmark = "benchmark:main"

@@ -23,7 +23,12 @@ A comprehensive benchmark suite for comparing NETCONF client implementations.
 
 - **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) ✅
 - **Go**: [scrapli/scrapligo](https://github.com/scrapli/scrapligo) ✅
-- **Python**: [ncclient](https://github.com/ncclient/ncclient) ✅
+- **Python**: [ncclient](https://github.com/ncclient/ncclient) (paramiko) ✅
+- **Python**: [ncclient](https://github.com/ncclient/ncclient) (libssh) ✅
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (system) ✅
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (paramiko) ✅
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (ssh2) ✅
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (asyncssh) ✅
 
 ## Benchmark Results
 
@@ -135,6 +140,9 @@ cd clients/go-scrapligo && go build -o "../../$BUILD_DIR/scrapligo-benchmark" &&
 echo "  - Setting up ncclient (Python) environment..."
 cd clients/ncclient && uv sync && cd ../..
 
+echo "  - Setting up scrapli-netconf (Python) environment..."
+cd clients/scrapli-netconf && uv sync && cd ../..
+
 echo "Build complete!"
 echo ""
 
@@ -143,7 +151,12 @@ echo ""
 PLOT_ALIASES=(
     --alias ".*nemith-benchmark.*" "Go (nemith.io)"
     --alias ".*scrapligo-benchmark.*" "Go (scrapli)"
-    --alias ".*ncclient.*" "Python (ncclient)"
+    --alias ".*ncclient.*paramiko.*" "Python (ncclient-paramiko)"
+    --alias ".*ncclient.*libssh.*" "Python (ncclient-libssh)"
+    --alias ".*scrapli.*system.*" "Python (scrapli-system)"
+    --alias ".*scrapli.*paramiko.*" "Python (scrapli-paramiko)"
+    --alias ".*scrapli.*ssh2.*" "Python (scrapli-ssh2)"
+    --alias ".*scrapli.*asyncssh.*" "Python (scrapli-asyncssh)"
 )
 
 # --- Size x Framing Mode Benchmarks ---
@@ -190,7 +203,12 @@ for size in 1024 10240 102400 1048576; do
             --export-json "$JSON_OUT" \
             --command-name "Go (nemith.io/netconf)" "./$BUILD_DIR/nemith-benchmark --size ${size} --count 100" \
             --command-name "Go (scrapli/scrapligo)" "./$BUILD_DIR/scrapligo-benchmark --size ${size} --count 100" \
-            --command-name "Python (ncclient)" "cd clients/ncclient && ./.venv/bin/python benchmark.py --size ${size} --count 100 && cd ../.."
+            --command-name "Python (ncclient/paramiko)" "cd clients/ncclient && ./.venv/bin/python benchmark.py --backend paramiko --size ${size} --count 100 && cd ../.." \
+            --command-name "Python (ncclient/libssh)" "cd clients/ncclient && ./.venv/bin/python benchmark.py --backend libssh --size ${size} --count 100 && cd ../.." \
+            --command-name "Python (scrapli-netconf/system)" "cd clients/scrapli-netconf && ./.venv/bin/python benchmark.py --transport system --size ${size} --count 100 && cd ../.." \
+            --command-name "Python (scrapli-netconf/paramiko)" "cd clients/scrapli-netconf && ./.venv/bin/python benchmark.py --transport paramiko --size ${size} --count 100 && cd ../.." \
+            --command-name "Python (scrapli-netconf/ssh2)" "cd clients/scrapli-netconf && ./.venv/bin/python benchmark.py --transport ssh2 --size ${size} --count 100 && cd ../.." \
+            --command-name "Python (scrapli-netconf/asyncssh)" "cd clients/scrapli-netconf && ./.venv/bin/python benchmark.py --transport asyncssh --size ${size} --count 100 && cd ../.."
 
         echo ""
         kill $SERVER_PID 2>/dev/null || true

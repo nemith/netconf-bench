@@ -1,10 +1,10 @@
 [project]
 name = "ncclient-benchmark"
 version = "0.1.0"
-description = "NETCONF ncclient benchmark"
+description = "NETCONF ncclient benchmark with multiple SSH backend options"
 requires-python = ">=3.14"
 dependencies = [
-    "ncclient>=0.7.0",
+    "ncclient[libssh]>=0.7.0",
 ]
 
 [project.scripts]

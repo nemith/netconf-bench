@@ -38,17 +38,25 @@ def run_get_request(mgr, size):
 
 def run_sequential(args):
     """Run requests sequentially."""
-    with manager.connect(
-        host=args.host,
-        port=args.port,
-        username="user",
-        password="pass",
-        hostkey_verify=False,
-        allow_agent=False,
-        look_for_keys=False,
-        device_params={"name": "default"},
-        timeout=30,
-    ) as mgr:
+    connect_kwargs = {
+        "host": args.host,
+        "port": args.port,
+        "username": "user",
+        "password": "pass",
+        "hostkey_verify": False,
+        "device_params": {"name": "default"},
+        "timeout": 30,
+    }
+
+    # Add libssh flag if using libssh backend
+    if args.backend == "libssh":
+        connect_kwargs["use_libssh"] = True
+    else:
+        # Paramiko-specific options
+        connect_kwargs["allow_agent"] = False
+        connect_kwargs["look_for_keys"] = False
+
+    with manager.connect(**connect_kwargs) as mgr:
         for i in range(args.count):
             run_get_request(mgr, args.size)
 
@@ -59,10 +67,17 @@ def main():
     parser.add_argument("--port", type=int, default=8830, help="NETCONF server port")
     parser.add_argument("--size", type=int, default=1024, help="Response size in bytes")
     parser.add_argument("--count", type=int, default=10, help="Number of requests")
+    parser.add_argument(
+        "--backend",
+        default="paramiko",
+        choices=["paramiko", "libssh"],
+        help="SSH backend to use (default: paramiko)",
+    )
 
     args = parser.parse_args()
 
     logger.info(f"Connecting to {args.host}:{args.port}")
+    logger.info(f"Using backend: {args.backend}")
     logger.info(f"Running {args.count} requests with size={args.size}")
 
     start = time.time()
