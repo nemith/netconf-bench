@@ -1,11 +1,10 @@
-| Command | Mean [s] | Min [s] | Max [s] | Relative |
-|:---|---:|---:|---:|---:|
-| `Go (nemith.io/netconf/exec)` | 4.614 ± 0.100 | 4.354 | 4.687 | 5.38 ± 0.13 |
-| `Go (nemith.io/netconf/do)` | 0.858 ± 0.008 | 0.844 | 0.875 | 1.00 |
-| `Go (scrapli/scrapligo)` | 3.934 ± 0.028 | 3.890 | 3.965 | 4.59 ± 0.05 |
-| `Python (ncclient/paramiko)` | 11.167 ± 0.132 | 10.971 | 11.278 | 13.02 ± 0.20 |
-| `Python (ncclient/libssh)` | 11.081 ± 0.029 | 11.002 | 11.099 | 12.92 ± 0.13 |
-| `Python (scrapli-netconf/system)` | 2.625 ± 0.012 | 2.608 | 2.645 | 3.06 ± 0.03 |
-| `Python (scrapli-netconf/paramiko)` | 2.165 ± 0.029 | 2.092 | 2.195 | 2.52 ± 0.04 |
-| `Python (scrapli-netconf/ssh2)` | 2.840 ± 0.021 | 2.810 | 2.884 | 3.31 ± 0.04 |
-| `Python (scrapli-netconf/asyncssh)` | 1.885 ± 0.017 | 1.863 | 1.919 | 2.20 ± 0.03 |
+| Implementation | Setup (ms) | RPC Calls (ms) | RPS | vs Baseline | Runs |
+|----------------|------------|----------------|-----|-------------|------|
+| Go: nemith.io/netconf (Do) | 0.0 ± 0.0 | 638.3 ± 28.0 | 156.8 ± 7.0 | **baseline** | 10 |
+| Python: scrapli-netconf (asyncssh) | 203.4 ± 7.0 | 2568.8 ± 45.8 | 38.9 ± 0.7 | 4.02x slower | 10 |
+| Python: scrapli-netconf (ssh2) | 92.0 ± 0.7 | 3179.7 ± 409.2 | 32.0 ± 4.4 | 4.98x slower | 10 |
+| Python: scrapli-netconf (paramiko) | 130.1 ± 1.4 | 4521.3 ± 93.0 | 22.1 ± 0.5 | 7.08x slower | 10 |
+| Go: nemith.io/netconf (Exec) | 0.0 ± 0.0 | 5562.6 ± 168.9 | 18.0 ± 0.5 | 8.71x slower | 10 |
+| Python: ncclient (libssh) | 87.9 ± 0.7 | 10547.4 ± 21.8 | 9.5 ± 0.0 | 16.52x slower | 10 |
+| Python: ncclient (paramiko) | 144.9 ± 1.3 | 10742.0 ± 79.1 | 9.3 ± 0.1 | 16.83x slower | 10 |
+| Go: github.com/scrapli/scrapligo (standard) | 4.1 ± 0.7 | 14642.0 ± 33.4 | 6.8 ± 0.0 | 22.94x slower | 10 |

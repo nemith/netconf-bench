@@ -4,10 +4,8 @@ import argparse
 import logging
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from ncclient import manager
-from ncclient.xml_ import to_ele
 
 # Configure app logging
 logging.basicConfig(
@@ -18,47 +16,6 @@ logging.basicConfig(
 logging.getLogger("ncclient").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
-
-
-def create_filter(size):
-    """Create a NETCONF filter with size attribute."""
-    return f'<filter type="subtree"><size>{size}</size></filter>'
-
-
-def run_get_request(mgr, size):
-    """Execute a single get request."""
-    filter_xml = create_filter(size)
-    try:
-        result = mgr.get(filter=filter_xml)
-        return True
-    except Exception as e:
-        logger.error(f"Request failed: {e}")
-        return False
-
-
-def run_sequential(args):
-    """Run requests sequentially."""
-    connect_kwargs = {
-        "host": args.host,
-        "port": args.port,
-        "username": "user",
-        "password": "pass",
-        "hostkey_verify": False,
-        "device_params": {"name": "default"},
-        "timeout": 30,
-    }
-
-    # Add libssh flag if using libssh backend
-    if args.backend == "libssh":
-        connect_kwargs["use_libssh"] = True
-    else:
-        # Paramiko-specific options
-        connect_kwargs["allow_agent"] = False
-        connect_kwargs["look_for_keys"] = False
-
-    with manager.connect(**connect_kwargs) as mgr:
-        for i in range(args.count):
-            run_get_request(mgr, args.size)
 
 
 def main():
@@ -73,6 +30,12 @@ def main():
         choices=["paramiko", "libssh"],
         help="SSH backend to use (default: paramiko)",
     )
+    parser.add_argument(
+        "--framing",
+        choices=["marked", "chunked"],
+        help="Framing type",
+        required=True,
+    )
 
     args = parser.parse_args()
 
@@ -80,25 +43,45 @@ def main():
     logger.info(f"Using backend: {args.backend}")
     logger.info(f"Running {args.count} requests with size={args.size}")
 
+    connect_kwargs = {}
+    if args.backend == "libssh":
+        connect_kwargs["use_libssh"] = True
+    else:
+        # Paramiko-specific options
+        connect_kwargs["allow_agent"] = False
+        connect_kwargs["look_for_keys"] = False
+
     start = time.time()
+    mgr = manager.connect(
+        host=args.host,
+        port=args.port,
+        username="admin",
+        password="admin",
+        hostkey_verify=False,
+        **connect_kwargs,
+    )
+    startup_time = time.time() - start
 
-    try:
-        run_sequential(args)
-    except Exception as e:
-        logger.error(f"Benchmark failed: {e}")
-        sys.exit(1)
+    filter = f'<filter type="subtree"><size>{args.size}</size></filter>'
 
+    start = time.time()
+    for i in range(args.count):
+        mgr.get(filter=filter)
     duration = time.time() - start
+    mgr.close_session()
 
-    # Print timing to stdout for hyperfine
-    print(f"{duration:.3f}")
-
-    # Log stats to stderr
-    throughput = args.count / duration
-    data_transferred = (args.count * args.size) / (1024 * 1024)
-    logger.info(f"Completed in {duration:.3f}s")
-    logger.info(f"Throughput: {throughput:.2f} req/s")
-    logger.info(f"Data transferred: {data_transferred:.2f} MB")
+    # impl,setup_ms,rpc_calls_ms,rpc
+    print(
+        "Python: ncclient ({}),{},{},{},{:.0f},{:.0f},{:.3f}".format(
+            args.backend,
+            args.framing,
+            args.size,
+            args.count,
+            startup_time * 1000,
+            duration * 1000,
+            args.count / duration,
+        )
+    )
 
 
 if __name__ == "__main__":
