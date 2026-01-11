@@ -1,0 +1,16 @@
+
+# NETCONF Client Benchmark Suite
+
+A comprehensive benchmark suite for comparing NETCONF client implementations.
+
+## Tested Clients
+
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (session.Exec) 
+- **Go**: [nemith.io/netconf](https://github.com/nemith/netconf) (session.Do) 
+- **Go**: [scrapli/scrapligo](https://github.com/scrapli/scrapligo) 
+- **Python**: [ncclient](https://github.com/ncclient/ncclient) (paramiko) 
+- **Python**: [ncclient](https://github.com/ncclient/ncclient) (libssh) 
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (system) 
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (paramiko) 
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (ssh2) 
+- **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (asyncssh) 

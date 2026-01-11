@@ -13,47 +13,26 @@ logging.basicConfig(
     level=logging.INFO, format="%(levelname)s:%(message)s", stream=sys.stderr
 )
 
-# Silence scrapli's verbose logging
 logging.getLogger("scrapli").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
 
-def create_filter(size):
-    """Create a NETCONF filter with size attribute."""
-    return f'<filter type="subtree"><size>{size}</size></filter>'
-
-
 def run_get_request(conn, size):
     """Execute a single get request (sync)."""
-    filter_xml = create_filter(size)
-    try:
-        result = conn.get(filter_=filter_xml)
-        return True
-    except Exception as e:
-        logger.error(f"Request failed: {e}")
-        return False
 
 
-async def run_get_request_async(conn, size):
-    """Execute a single get request (async)."""
-    filter_xml = create_filter(size)
-    try:
-        result = await conn.get(filter_=filter_xml)
-        return True
-    except Exception as e:
-        logger.error(f"Request failed: {e}")
-        return False
-
-
-def run_sequential_sync(args):
-    """Run requests sequentially (sync transports)."""
+def run_sync(args):
     transport_options = {}
 
     # For system transport, disable PTY allocation for NETCONF
     if args.transport == "system":
         transport_options["netconf_force_pty"] = False
+        transport_options["ssh_args"] = ["-T"]
 
+    filter = f'<filter type="subtree"><size>{args.size}</size></filter>'
+
+    start = time.time()
     conn = NetconfDriver(
         host=args.host,
         port=args.port,
@@ -63,21 +42,27 @@ def run_sequential_sync(args):
         ssh_config_file=False,
         transport=args.transport,
         transport_options=transport_options,
-        timeout_socket=30,
-        timeout_transport=30,
-        timeout_ops=30,
+        timeout_socket=300,
+        timeout_transport=300,
+        timeout_ops=300,
     )
 
     conn.open()
-    try:
-        for i in range(args.count):
-            run_get_request(conn, args.size)
-    finally:
-        conn.close()
+    startup_time = time.time() - start
+
+    start = time.time()
+    for i in range(args.count):
+        result = conn.get(filter_=filter)
+    duration = time.time() - start
+
+    conn.close()
+
+    print_results(args, startup_time, duration)
 
 
-async def run_sequential_async(args):
-    """Run requests sequentially (async transport)."""
+async def run_async(args):
+    filter = f'<filter type="subtree"><size>{args.size}</size></filter>'
+    start = time.time()
     conn = AsyncNetconfDriver(
         host=args.host,
         port=args.port,
@@ -92,11 +77,31 @@ async def run_sequential_async(args):
     )
 
     await conn.open()
-    try:
-        for i in range(args.count):
-            await run_get_request_async(conn, args.size)
-    finally:
-        await conn.close()
+    startup_time = time.time() - start
+
+    start = time.time()
+    for i in range(args.count):
+        await conn.get(filter_=filter)
+    duration = time.time() - start
+
+    await conn.close()
+
+    print_results(args, startup_time, duration)
+
+
+def print_results(args, startup_time, duration):
+    # impl,setup_ms,rpc_calls_ms,rpc
+    print(
+        "Python: scrapli-netconf ({}),{},{},{},{:.0f},{:.0f},{:.3f}".format(
+            args.transport,
+            args.framing,
+            args.size,
+            args.count,
+            startup_time * 1000,
+            duration * 1000,
+            args.count / duration,
+        )
+    )
 
 
 def main():
@@ -111,6 +116,12 @@ def main():
         choices=["system", "paramiko", "ssh2", "asyncssh"],
         help="SSH transport to use (default: paramiko)",
     )
+    parser.add_argument(
+        "--framing",
+        choices=["marked", "chunked"],
+        help="Framing type",
+        required=True,
+    )
 
     args = parser.parse_args()
 
@@ -118,28 +129,10 @@ def main():
     logger.info(f"Using transport: {args.transport}")
     logger.info(f"Running {args.count} requests with size={args.size}")
 
-    start = time.time()
-
-    try:
-        if args.transport == "asyncssh":
-            asyncio.run(run_sequential_async(args))
-        else:
-            run_sequential_sync(args)
-    except Exception as e:
-        logger.error(f"Benchmark failed: {e}")
-        sys.exit(1)
-
-    duration = time.time() - start
-
-    # Print timing to stdout for hyperfine
-    print(f"{duration:.3f}")
-
-    # Log stats to stderr
-    throughput = args.count / duration
-    data_transferred = (args.count * args.size) / (1024 * 1024)
-    logger.info(f"Completed in {duration:.3f}s")
-    logger.info(f"Throughput: {throughput:.2f} req/s")
-    logger.info(f"Data transferred: {data_transferred:.2f} MB")
+    if args.transport == "asyncssh":
+        asyncio.run(run_async(args))
+    else:
+        run_sync(args)
 
 
 if __name__ == "__main__":
