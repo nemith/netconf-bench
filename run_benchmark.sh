@@ -31,6 +31,16 @@ A comprehensive benchmark suite for comparing NETCONF client implementations.
 - **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (ssh2) ✅
 - **Python**: [scrapli/scrapli-netconf](https://github.com/scrapli/scrapli_netconf) (asyncssh) ✅
 
+## Interpretation
+The results are not comparing apples to apples and like any microbenchmark please take them with a grain of salt.
+
+Some libraries will parse the results, some don't and just return an object to be used.  
+
+Using hyperfine is great to bootstrap and get some quick results but it includes startup times which skews the libarary perforamnces expecially for interpreted systems.  We do use the --warmup option which should make sure compiled python code is used.
+
+These benchmarks can be improved and PRs are welcome to improve the performance of implemenations, to measure actual request time, and add new libraries/languages.  
+Also it should be no suprise that I wrote one of these language with high performance and throughput in mind and as such I have bias and these tests probably refect that.
+
 ## Benchmark Results
 
 All tests run 100 requests comparing NETCONF 1.1 (Chunked Framing) vs NETCONF 1.0 (Marked Framing).
